@@ -2,6 +2,7 @@ package com.ghazi.trivia;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,6 +14,7 @@ import androidx.databinding.DataBindingUtil;
 import com.ghazi.trivia.data.Repository;
 import com.ghazi.trivia.databinding.ActivityMainBinding;
 import com.ghazi.trivia.model.Question;
+import com.ghazi.trivia.model.Score;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -23,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private int currentQuestionIndex = 0;
     List<Question> questionList;
+
+    private int scoreCounter;
+    private Score score;
 
 
     @Override
@@ -35,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        score = new Score();
 
         questionList = new Repository().getQuestion(questionArrayList -> {
                     binding.questionTextView.setText(questionArrayList.get(currentQuestionIndex).getAnswer());
@@ -68,9 +75,11 @@ public class MainActivity extends AppCompatActivity {
         if (userChoseCorrect == answer) {
             snackMessageId = R.string.correct_answer;
             fadeAnimation();
+            addPoints();
         } else {
             snackMessageId = R.string.incorrect;
             shakeAnimation();
+            deductPoints();
 
         }
         Snackbar.make(binding.cardView, snackMessageId, Snackbar.LENGTH_SHORT).show();
@@ -138,5 +147,25 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void addPoints() {
+        scoreCounter += 100;
+        score.setScore(scoreCounter);
+        binding.scoreText.setText(String.format("Score: %s", score.getScore()));
+    }
+
+    private void deductPoints() {
+        if (scoreCounter > 0) {
+            scoreCounter -=25;
+            score.setScore(scoreCounter);
+            binding.scoreText.setText(String.format("Score: %s", score.getScore()));
+
+        } else {
+            scoreCounter = 0;
+            score.setScore(scoreCounter);
+        }
+        Log.d("Score", "deductPoints: " + score.getScore());
+
     }
 }
