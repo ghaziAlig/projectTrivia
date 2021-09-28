@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:text="@string/out_of_text"
             android:textColor="@color/primary_text"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/question_text_padding"
+                android:text="@string/question_placeholder"
                 android:textColor="@color/primary_text"
                 android:textSize="16sp" />
         </androidx.cardview.widget.CardView>

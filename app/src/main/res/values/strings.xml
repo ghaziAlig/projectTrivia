@@ -5,8 +5,9 @@
     <string name="true_button">True</string>
     <string name="false_button">False</string>
     <string name="next_button">Next</string>
-    <string name="question_placeholder">The question is going to be displayed here.</string>
+    <string name="question_placeholder">The question fetched from the API will be shown inside this card view.</string>
     <string name="correct_answer">Correct!</string>
     <string name="incorrect">Incorrect!</string>
     <string name="question_out_of_formatted">Question: %d/%d</string>
+    <string name="score">Score:</string>
 </resources>
