@@ -15,6 +15,7 @@ import com.ghazi.trivia.data.Repository;
 import com.ghazi.trivia.databinding.ActivityMainBinding;
 import com.ghazi.trivia.model.Question;
 import com.ghazi.trivia.model.Score;
+import com.ghazi.trivia.util.Prefs;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int scoreCounter;
     private Score score;
+    private Prefs prefs;
 
 
     @Override
@@ -43,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
 
         score = new Score();
 
+        prefs = new Prefs(MainActivity.this);
+
+        currentQuestionIndex = prefs.getState();
+
+
+        binding.highScore.setText(String.format("Highest Score: %s", prefs.getHighestScore()));
+
+        binding.scoreText.setText(String.format("Score: %s", score.getScore()));
+
         questionList = new Repository().getQuestion(questionArrayList -> {
                     binding.questionTextView.setText(questionArrayList.get(currentQuestionIndex).getAnswer());
                     updateCounter(questionArrayList);
@@ -53,8 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 );
 
         binding.buttonNext.setOnClickListener(view -> {
-            currentQuestionIndex = (currentQuestionIndex + 1) % questionList.size();
-            updateQuestion();
+            getNextQuestion();
         });
 
         binding.buttonTrue.setOnClickListener(view -> {
@@ -67,6 +77,11 @@ public class MainActivity extends AppCompatActivity {
             updateQuestion();
         });
 
+    }
+
+    private void getNextQuestion() {
+        currentQuestionIndex = (currentQuestionIndex + 1) % questionList.size();
+        updateQuestion();
     }
 
     private void checkAnswer(boolean userChoseCorrect) {
@@ -111,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 binding.questionTextView.setTextColor(Color.rgb(21, 21, 21));
+                getNextQuestion();
 
             }
 
@@ -123,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fadeAnimation() {
         AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        alphaAnimation.setDuration(300);
+        alphaAnimation.setDuration(100);
         alphaAnimation.setRepeatCount(1);
         alphaAnimation.setRepeatMode(Animation.REVERSE);
 
@@ -139,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 binding.questionTextView.setTextColor(Color.rgb(21, 21, 21));
+                getNextQuestion();
 
             }
 
@@ -168,4 +185,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Score", "deductPoints: " + score.getScore());
 
     }
+
+    @Override
+    protected void onPause() {
+        prefs.saveHighestScore(score.getScore());
+        prefs.setState(currentQuestionIndex);
+        super.onPause();
+    }
+
 }

@@ -10,4 +10,5 @@
     <string name="incorrect">Incorrect!</string>
     <string name="question_out_of_formatted">Question: %d/%d</string>
     <string name="score">Score:</string>
+    <string name="highest">Highest:</string>
 </resources>
